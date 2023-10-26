@@ -41,16 +41,14 @@ class PDFController extends Controller
             $pdf_file_path = storage_path('app/' . $pdf_file_path);
             $i++;
             // if not pdf dont convert
+            $converted_pdf_name = $pdf_file_name . '_converted.pdf';
+            $converted_pdf_path = storage_path('app/temp/' . $converted_pdf_name);
             if (!preg_match('/\.pdf$/i', $pdf_file_path)) {
                // convert to pdf using imagemagick
-                $converted_pdf_name = $pdf_file_name . '_converted.pdf';
-                $converted_pdf_path = storage_path('app/temp/' . $converted_pdf_name);
                 shell_exec("convert " . $pdf_file_path . " " . $converted_pdf_path);
                 array_push($pdf_files, $converted_pdf_path);
                 continue;
             }
-            $converted_pdf_name = $pdf_file_name . '_converted.pdf';
-            $converted_pdf_path = storage_path('app/temp/' . $converted_pdf_name);
             // convert to version 1.4 using ghostscript pdf and images to pdf
 
             shell_exec("gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=" . $converted_pdf_path . " -dCompatibilityLevel=1.4 " . $pdf_file_path);
