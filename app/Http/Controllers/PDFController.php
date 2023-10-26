@@ -9,20 +9,15 @@ class PDFController extends Controller
 {
     public function merge(Request $request)
     {
-        // {
-        //     "api_key": 1234567890,
-        //     "files": [
-        //         "https://www.africau.edu/images/default/sample.pdf",
-        //         "https://www.africau.edu/images/default/sample.pdf",
-        //         "https://www.africau.edu/images/default/sample.pdf"
-        //     ]
-        // }
         //check api key
         if ($request->api_key != env('API_KEY')) {
             return response()->json([
                 'message' => 'Invalid API Key'
             ], 401);
         }
+
+        //store request json to laravel log
+        \Log::info($request->json()->all());
 
         //read json
         $json = $request->json()->all();
