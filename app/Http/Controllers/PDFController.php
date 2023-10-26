@@ -72,11 +72,11 @@ class PDFController extends Controller
         $output_file = file_get_contents($output_path_name);
         $output_file_base64 = base64_encode($output_file);
 
-        // delete temp files
-        foreach ($pdf_files as $pdf_file) {
-            unlink($pdf_file);
-        }
-        unlink($output_path_name);
+        // delete all  files in temp and output folder
+        $files = Storage::files('temp');
+        Storage::delete($files);
+        $files = Storage::files('outputs');
+        Storage::delete($files);
 
         return response()->json([
             'message' => 'success',
