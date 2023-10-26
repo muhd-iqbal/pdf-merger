@@ -71,10 +71,10 @@ class PDFController extends Controller
         $output_file_base64 = base64_encode($output_file);
 
         // delete all  files in temp and output folder
-        $files = Storage::files('temp');
-        Storage::delete($files);
-        $files = Storage::files('outputs');
-        Storage::delete($files);
+        // $files = Storage::files('temp');
+        // Storage::delete($files);
+        // $files = Storage::files('outputs');
+        // Storage::delete($files);
 
         return response()->json([
             'message' => 'success',
