@@ -39,7 +39,7 @@ class PDFController extends Controller
             $pdf_file_path = storage_path('app/' . $pdf_file_path);
             $converted_pdf_name = $pdf_file_name . '_converted.pdf';
             $converted_pdf_path = storage_path('app/temp/' . $converted_pdf_name);
-            exec("gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=". $converted_pdf_path . " -dCompatibilityLevel=1.4 " . $pdf_file_path);
+            shell_exec("gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=". $converted_pdf_path . " -dCompatibilityLevel=1.4 " . $pdf_file_path);
             array_push($pdf_files, $converted_pdf_path);
             $i++;
         }
@@ -53,7 +53,7 @@ class PDFController extends Controller
             $gs_command .= $pdf_file . " ";
         }
         // dd($gs_command);
-        exec($gs_command);
+        shell_exec($gs_command);
 
         //convert merged pdf to base64 string
         $output_file = file_get_contents($output_path_name);
