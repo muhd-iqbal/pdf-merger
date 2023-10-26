@@ -25,6 +25,7 @@ class PDFController extends Controller
 
         //download pdfs and save to local storage folder temp and convert to version 1.4
         $pdf_files = [];
+        $temp_files = [];
         $i = 0;
         foreach ($pdf_links as $pdf_link) {
 
@@ -34,6 +35,7 @@ class PDFController extends Controller
             $pdf_file_path = 'temp/' . $pdf_file_name;
             Storage::put($pdf_file_path, $pdf_file);
             $pdf_file_path = storage_path('app/' . $pdf_file_path);
+            array_push($temp_files, $pdf_file_path);
             $i++;
             // if not pdf dont convert
             $converted_pdf_name = $pdf_file_name . '_converted.pdf';
@@ -65,11 +67,14 @@ class PDFController extends Controller
         $output_file = file_get_contents($output_path_name);
         $output_file_base64 = base64_encode($output_file);
 
-        // delete all  files in temp and output folder
-        $files = Storage::files('temp');
-        Storage::delete($files);
-        $files = Storage::files('outputs');
-        Storage::delete($files);
+        // delete files and converted pdfs
+        foreach ($temp_files as $temp_file) {
+            unlink($temp_file);
+        }
+        foreach ($pdf_files as $pdf_file) {
+            unlink($pdf_file);
+        }
+        unlink($output_path_name);
 
         return response()->json([
             'message' => 'success',
