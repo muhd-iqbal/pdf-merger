@@ -65,6 +65,34 @@ class PDFController extends Controller
 
         //convert merged pdf to base64 string
         $output_file = file_get_contents($output_path_name);
+
+        if($request->has('return_type')){
+            if($request->return_type == 'link'){
+                // return url to output path name
+                //move file to public folder
+                $output_file_name = md5(time()) . '.pdf';
+                $output_file_path = 'public/pdf/' . $output_file_name;
+                Storage::put($output_file_path, $output_file);
+                $output_file_path = storage_path('app/' . $output_file_path);
+                // delete files and converted pdfs
+                foreach ($temp_files as $temp_file) {
+                    unlink($temp_file);
+                }
+                foreach ($pdf_files as $pdf_file) {
+                    unlink($pdf_file);
+                }
+                unlink($output_path_name);
+
+                return response()->json([
+                    'message' => 'success',
+                    'data' => [
+                        'file' => url('/storage/pdf/' . $output_file_name)
+                    ]
+                ], 200);
+
+            }
+        }
+
         $output_file_base64 = base64_encode($output_file);
 
         // delete files and converted pdfs
